@@ -1,5 +1,5 @@
-import numpy as np
 import pandas as pd
+import numpy as np
 
 def read_xls_fixations(xlsname = None,opt = None): 
     # read_xls_fixations - read an EXCEL file with fixation data
@@ -58,7 +58,6 @@ def read_xls_fixations(xlsname = None,opt = None):
     FY = rdata.columns.get_loc('FixY') if 'FixY' in headers else -1
     FD =  rdata.columns.get_loc('FixD') if 'FixD' in headers else -1
     
-    """
     if len(SID) != 1:
         raise Exception('error with SubjectID')
     
@@ -80,30 +79,24 @@ def read_xls_fixations(xlsname = None,opt = None):
     else:
         if len(FD) > 1:
             raise Exception('error with FixD -- to many columns')
-    """
-
+    
     
     # initialize names and trial names
-    sid_names = []
-    sid_trials = []
-    data = []
-    
-
+    sid_names = np.array([])
+    sid_trials = np.array([])
+    data = np.array([])
     # read data
-    for i in range(5):
-        print(i)
+    for i in np.arange(2,rdata.shape[1-1]+1).reshape(-1):
         mysid = rdata[i,SID]
         mytid = rdata[i,TID]
-        
-        """
-        if isinstance(rdata[i,FX],str):
+        if isstr(rdata[i,FX]):
             raise Exception('Value for FixX is text, not a number.')
-        if isinstance(rdata[i,FY],str):
+        if isstr(rdata[i,FY]):
             raise Exception('Value for FixY is text, not a number.')
         myfxy = np.array([rdata[i,FX],rdata[i,FY]])
         if len(FD) == 1:
             # include duration if available
-            if isinstance(rdata[i,FD],str):
+            if isstr(rdata[i,FD]):
                 raise Exception('Value for FixD is text, not a number.')
             myfxy = np.array([myfxy,rdata[i,FD]])
         if True:
@@ -126,7 +119,7 @@ def read_xls_fixations(xlsname = None,opt = None):
             data[s,1][t,1] = []
         # put fixation
         data[s,1][t,1][end() + 1,:] = myfxy
-        
+    
     print('- found %d subjects:\n' % (len(sid_names)))
     print('%s ' % (sid_names[:]))
     print('\n' % ())
@@ -134,6 +127,3 @@ def read_xls_fixations(xlsname = None,opt = None):
         print('    * subject %d had %d trials\n' % (i,len(data[i])))
     
     return data,sid_names,sid_trials
-    """
-
-print(read_xls_fixations('/Users/marcoincerti/Desktop/EMHMM-Toolbox/EMHMM-Toolbox/tests/demodata.xls'))
