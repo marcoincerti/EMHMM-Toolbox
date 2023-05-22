@@ -1,5 +1,6 @@
 import numpy as np
 from emhmm_v2.util.read_xls_fixations import read_xls_fixations
+from emhmm_v2.hmm.vbhmm_learn import vbhmm_learn
 
 # demo_faces - example of eye gaze analysis for face recognition
 #

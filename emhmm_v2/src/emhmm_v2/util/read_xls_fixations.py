@@ -1,7 +1,5 @@
 import pandas as pd
 
-import pandas as pd
-
 def read_xls_fixations(xlsname, opt=None):
     # Read the Excel file
     xls_data = pd.read_excel(xlsname)

@@ -1,5 +1,5 @@
 import numpy as np
-import vbhmm_em, vbhmm_standardize, vbhmm_plot
+from emhmm_v2.hmm.vbhmm_em import vbhmm_em
 
 
 def vbhmm_learn(data, K, vbopt=None):
