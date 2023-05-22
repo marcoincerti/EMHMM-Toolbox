@@ -85,40 +85,52 @@ def read_xls_fixations(xlsname = None,opt = None):
     sid_names = np.array([])
     sid_trials = np.array([])
     data = np.array([])
+
     # read data
-    for i in np.arange(2,rdata.shape[1-1]+1).reshape(-1):
-        mysid = rdata[i,SID]
-        mytid = rdata[i,TID]
-        if isstr(rdata[i,FX]):
+    for i in np.arange(2, rdata.shape[1] - 1).reshape(-1):
+        mysid = rdata[i, SID]
+        mytid = rdata[i, TID]
+        
+        if isinstance(rdata[i, FX], str):
             raise Exception('Value for FixX is text, not a number.')
-        if isstr(rdata[i,FY]):
+        if isinstance(rdata[i, FY], str):
             raise Exception('Value for FixY is text, not a number.')
-        myfxy = np.array([rdata[i,FX],rdata[i,FY]])
+        
+        myfxy = np.array([rdata[i, FX], rdata[i, FY]])
+        
         if len(FD) == 1:
             # include duration if available
-            if isstr(rdata[i,FD]):
+            if isinstance(rdata[i, FD], str):
                 raise Exception('Value for FixD is text, not a number.')
-            myfxy = np.array([myfxy,rdata[i,FD]])
+            myfxy = np.array([myfxy, rdata[i, FD]])
+        
         if True:
-            mysid = sprintf('%g',mysid)
+            mysid = str(mysid)
+        
         if True:
-            mytid = sprintf('%g',mytid)
+            mytid = str(mytid)
+        
         # find subject
-        s = find(str(mysid) == str(sid_names))
-        if len(s)==0:
+        s = np.where(str(mysid) == str(sid_names))[0]
+        
+        if len(s) == 0:
             # new subject
-            sid_names[end() + 1,1] = mysid
-            sid_trials[end() + 1,1] = np.array([])
-            s = len(sid_names)
-            data[s,1] = np.array([])
+            sid_names = np.append(sid_names, mysid)
+            sid_trials = np.append(sid_trials, np.array([]))
+            s = len(sid_names) - 1
+            data = np.append(data, np.array([]))
+            data[s, 0] = np.array([])
+        
         # find trial
-        t = find(str(mytid) == str(sid_trials[s]))
-        if len(t)==0:
-            sid_trials[s,1][end() + 1,1] = mytid
-            t = len(sid_trials[s])
-            data[s,1][t,1] = []
+        t = np.where(str(mytid) == str(sid_trials[s]))[0]
+        
+        if len(t) == 0:
+            sid_trials[s] = np.append(sid_trials[s], mytid)
+            t = len(sid_trials[s]) - 1
+            data[s, 0] = np.append(data[s, 0], [])
+        
         # put fixation
-        data[s,1][t,1][end() + 1,:] = myfxy
+        data[s, 0][t, 0] = np.append(data[s, 0][t, 0], myfxy)
     
     print('- found %d subjects:\n' % (len(sid_names)))
     print('%s ' % (sid_names[:]))
