@@ -1,16 +1,15 @@
 [tool.poetry]
-name = "emhmm-toolbox"
+name = "emhmm-v2"
 version = "0.1.0"
 description = ""
 authors = ["marcoincerti <marco.incerti@studenti.unimi.it>"]
 readme = "README.md"
-packages = [{include = "emhmm_toolbox"},
-            { include = "emhmm_toolbox/**/*.py" },]
+packages = [{include = "emhmm_v2", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pandas = "^2.0.0"
-numpy = "^1.24.2"
+numpy = "^1.24.3"
+pandas = "^2.0.1"
 xlrd = "^2.0.1"
 
 

@@ -1,5 +1,5 @@
 import numpy as np
-import emhmm_v2
+from emhmm_v2.util.read_xls_fixations import read_xls_fixations
 
 # demo_faces - example of eye gaze analysis for face recognition
 #
@@ -13,7 +13,7 @@ np.random.seed(101)
 np.random.seed(101)
 
 # Load data from xls
-data, SubjNames, TrialNames = read_xls_fixations('demodata.xls')
+data, SubjNames, TrialNames = read_xls_fixations('/Users/marcoincerti/Desktop/EMHMM-Toolbox/emhmm_v2/src/demo/demodata.xls')
 
 # the data is read and separated by subject and trial, and stored in a list:
 # data[i]         = i-th subject
