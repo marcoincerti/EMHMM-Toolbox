@@ -1,5 +1,5 @@
 import numpy as np
-from emhmm_toolbox import read_xls_fixations, vbhmm_learn, vbhmm_plot, vbhmm_plot_compact, vhem_cluster, vhem_plot, vhem_plot_clusters, stats_ttest
+import emhmm_v2
 
 # demo_faces - example of eye gaze analysis for face recognition
 #
@@ -59,7 +59,7 @@ for i in range(N):
     ax.set_title(f'Subject {i+1}')
 plt.tight_layout()
 
-# Run HEM clustering (1 group)
+""" # Run HEM clustering (1 group)
 # summarize all subjects with one HMM
 print('=== Clustering (1 group) ===')
 hemopt = {'sortclusters': 'f'}
@@ -90,3 +90,4 @@ print(f'test group hmm1 different from group hmm2: t({info["df"]})={info["tstat"
 # run t-test for hmm2
 p, info, lld = stats_ttest(group_hmms2.hmms[1], group_hmms2.hmms[0], data2)
 print(f'test group hmm2 different from group hmm1: t({info["df"]})={info["tstat"]}; p={p}')
+ """

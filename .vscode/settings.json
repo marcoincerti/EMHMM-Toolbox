@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./EMHMM-Toolbox/emhmm_toolbox/src/hmm",
+        "./EMHMM-Toolbox/emhmm_toolbox/src/util"
+    ]
+}
