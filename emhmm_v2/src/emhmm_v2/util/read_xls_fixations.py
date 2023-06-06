@@ -1,11 +1,14 @@
+import numpy as np
 import pandas as pd
 
 def read_xls_fixations(xlsname, opt=None):
-    # Read the Excel file
-    xls_data = pd.read_excel(xlsname)
+    print(f'Reading {xlsname}')
+    
+    # Read the XLS file
+    df = pd.read_excel(xlsname)
     
     # Get the headers
-    headers = list(xls_data.columns)
+    headers = df.columns.tolist()
     
     # Find the header indices
     SID = headers.index('SubjectID')
@@ -14,34 +17,57 @@ def read_xls_fixations(xlsname, opt=None):
     FY = headers.index('FixY')
     FD = headers.index('FixD') if 'FixD' in headers else None
     
-    if SID is None or TID is None or FX is None or FY is None:
-        raise ValueError('Missing header(s) in the Excel file.')
+    if SID == -1:
+        raise ValueError('Error with SubjectID')
+    print(f'- found SubjectID in column {SID + 1}')
     
-    print(f'- found SubjectID in column {SID}')
-    print(f'- found TrialID in column {TID}')
-    print(f'- found FixX in column {FX}')
-    print(f'- found FixY in column {FY}')
+    if TID == -1:
+        raise ValueError('Error with TrialID')
+    print(f'- found TrialID in column {TID + 1}')
+    
+    if FX == -1:
+        raise ValueError('Error with FixX')
+    print(f'- found FixX in column {FX + 1}')
+    
+    if FY == -1:
+        raise ValueError('Error with FixY')
+    print(f'- found FixY in column {FY + 1}')
     
     if FD is not None:
-        print(f'- found FixD in column {FD}')
+        print(f'- found FixD in column {FD + 1}')
     
-    # Initialize variables
+    # Initialize names and trial names
     sid_names = []
     sid_trials = []
     data = []
     
     # Read data
-    for i, row in xls_data.iterrows():
-        mysid = str(row[SID])
-        mytid = str(row[TID])
-        myfxy = [row[FX], row[FY]]
+    for i in range(len(df)):
+        mysid = df.iloc[i, SID]
+        mytid = df.iloc[i, TID]
+        
+        if pd.isna(df.iloc[i, FX]) or not np.isreal(df.iloc[i, FX]):
+            raise ValueError('Value for FixX is not a number.')
+            
+        if pd.isna(df.iloc[i, FY]) or not np.isreal(df.iloc[i, FY]):
+            raise ValueError('Value for FixY is not a number.')
+        
+        myfxy = [df.iloc[i, FX], df.iloc[i, FY]]
         
         if FD is not None:
-            myfxy.append(row[FD])
+            if pd.isna(df.iloc[i, FD]) or not np.isreal(df.iloc[i, FD]):
+                raise ValueError('Value for FixD is not a number.')
+            myfxy.append(df.iloc[i, FD])
+        
+        if pd.api.types.is_number(mysid):
+            mysid = str(int(mysid))
+        
+        if pd.api.types.is_number(mytid):
+            mytid = str(int(mytid))
         
         # Find subject
-        s = sid_names.index(mysid) if mysid in sid_names else None
-        if s is None:
+        s = sid_names.index(mysid) if mysid in sid_names else -1
+        if s == -1:
             # New subject
             sid_names.append(mysid)
             sid_trials.append([])
@@ -49,8 +75,8 @@ def read_xls_fixations(xlsname, opt=None):
             data.append([])
         
         # Find trial
-        t = sid_trials[s].index(mytid) if mytid in sid_trials[s] else None
-        if t is None:
+        t = sid_trials[s].index(mytid) if mytid in sid_trials[s] else -1
+        if t == -1:
             sid_trials[s].append(mytid)
             t = len(sid_trials[s]) - 1
             data[s].append([])
@@ -60,7 +86,8 @@ def read_xls_fixations(xlsname, opt=None):
     
     print(f'- found {len(sid_names)} subjects:')
     print(' '.join(sid_names))
-    for i in range(len(data)):
-        print(f'  * subject {i+1} had {len(data[i])} trials')
+    
+    for i, subject in enumerate(data):
+        print(f'  * subject {i + 1} had {len(subject)} trials')
     
     return data, sid_names, sid_trials
